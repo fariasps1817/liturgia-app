@@ -1,20 +1,48 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# 📖 Liturgia Diária App
 
-# Run and deploy your AI Studio app
+Aplicativo de liturgia católica com leituras, salmos, orações eucarísticas e preces da comunidade.
 
-This contains everything you need to run your app locally.
+## ✨ Funcionalidades
 
-View your app in AI Studio: https://ai.studio/apps/drive/1eqDQBEN6gVKNbshRvlNzMUNR6MjxyiZb
+- 📜 **Leituras do Dia** - 1ª e 2ª leitura, Evangelho e Salmo Responsorial
+- 🙏 **Orações Eucarísticas** - 5 orações com respostas da assembleia (Nova Tradução 2023)
+- 🤝 **Preces da Comunidade** - Geradas com IA baseadas nas leituras do dia
+- 📅 **Calendário Litúrgico** - Festas, memórias e solenidades
+- 📱 **PWA** - Instale como app no celular
 
-## Run Locally
+## 🛠️ Tecnologias
 
-**Prerequisites:**  Node.js
+- React + TypeScript
+- Vite
+- Tailwind CSS
+- Google Gemini API (para preces)
 
+## 🚀 Como Executar
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+1. Clone o repositório:
+```bash
+git clone https://github.com/fariasps1817/liturgia-app.git
+cd liturgia-app
+```
+
+2. Instale as dependências:
+```bash
+npm install
+```
+
+3. Configure a chave da API (opcional, apenas para preces):
+   - Crie um arquivo `.env.local`
+   - Adicione: `VITE_GEMINI_API_KEY=sua-chave-aqui`
+
+4. Execute:
+```bash
+npm run dev
+```
+
+## 👨‍💻 Desenvolvedor
+
+**Farias Sousa**
+
+## 📄 Licença
+
+Este projeto é livre para uso pessoal e comunitário.
