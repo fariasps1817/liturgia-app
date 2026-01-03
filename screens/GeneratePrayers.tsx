@@ -187,6 +187,25 @@ const GeneratePrayers: React.FC = () => {
                   <span className="material-symbols-outlined">content_copy</span>
                   Copiar
                 </button>
+
+                <button
+                  onClick={() => {
+                    const text = `Preces - ${liturgy.title}\n\nResposta: "${data.response}"\n\n${data.prayers.map((p, i) => `${i + 1}. ${p}`).join('\n\n')}`;
+                    if (navigator.share) {
+                      navigator.share({
+                        title: `Preces - ${liturgy.title}`,
+                        text: text
+                      });
+                    } else {
+                      navigator.clipboard.writeText(text);
+                      alert('Preces copiadas para compartilhar!');
+                    }
+                  }}
+                  className="flex-1 flex items-center justify-center gap-2 py-4 bg-primary text-white rounded-2xl font-bold transition-all hover:bg-primary/90 active:scale-95"
+                >
+                  <span className="material-symbols-outlined">share</span>
+                  Compartilhar
+                </button>
               </div>
             </div>
           </div>
