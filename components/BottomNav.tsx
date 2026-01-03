@@ -9,6 +9,7 @@ const BottomNav: React.FC = () => {
     { to: '/preces', icon: 'volunteer_activism', label: 'Preces' },
     { to: '/calendario', icon: 'calendar_month', label: 'Calendário' },
     { to: '/oracoes-eucaristicas', icon: 'auto_stories', label: 'O.E.' },
+    { to: '/sobre', icon: 'info', label: 'Sobre' },
     { to: '/ajustes', icon: 'settings', label: 'Ajustes' },
   ];
 
