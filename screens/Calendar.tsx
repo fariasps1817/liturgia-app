@@ -187,8 +187,8 @@ const Calendar: React.FC = () => {
             const colorClass = savedLiturgy
               ? COLOR_MAP[savedLiturgy.color] || 'bg-slate-100 dark:bg-surface-dark'
               : 'bg-slate-100 dark:bg-surface-dark';
-            const isLoading = loadingDay === calendarDay.day;
-            const isSelected = selectedDay?.day === calendarDay.day && selectedDay?.isCurrentMonth && calendarDay.isCurrentMonth;
+            const isLoading = loadingDay === calendarDay.day && calendarDay.isCurrentMonth;
+            const isSelected = selectedDay?.date.toISOString().split('T')[0] === dateKey;
 
             return (
               <button
