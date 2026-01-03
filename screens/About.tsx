@@ -38,7 +38,7 @@ const About: React.FC = () => {
 
           <div className="bg-primary/10 border border-primary/20 px-4 py-1.5 rounded-full mb-8">
             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">
-              VERSÃO 2.4.0
+              VERSÃO 2.5.0 - Orações Eucarísticas
             </span>
           </div>
 
