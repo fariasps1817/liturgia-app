@@ -198,8 +198,8 @@ const Calendar: React.FC = () => {
                 className={`
                   h-12 rounded-xl flex flex-col items-center justify-center gap-0.5 transition-all
                   ${calendarDay.isCurrentMonth ? 'cursor-pointer hover:scale-105' : 'opacity-30 cursor-default'}
-                  ${calendarDay.isToday ? 'ring-2 ring-primary ring-offset-2 dark:ring-offset-background-dark' : ''}
-                  ${isSelected ? 'ring-2 ring-yellow-400 ring-offset-1' : ''}
+                  ${calendarDay.isToday && !isSelected ? 'ring-2 ring-primary ring-offset-2 dark:ring-offset-background-dark' : ''}
+                  ${isSelected ? 'ring-[3px] ring-blue-500 ring-offset-2 dark:ring-offset-background-dark scale-110 z-10' : ''}
                   ${colorClass}
                 `}
               >
