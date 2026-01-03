@@ -66,9 +66,15 @@ const ReadingDetail: React.FC = () => {
 
   const conclusion = getConclusion();
 
+  // Formatar data da liturgia
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr + 'T00:00:00');
+    return date.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' });
+  };
+
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-background-light dark:bg-background-dark">
-      <header className="flex items-center justify-between px-4 h-16 bg-white/50 dark:bg-background-dark/50 backdrop-blur-lg border-b border-slate-200 dark:border-slate-800 shrink-0">
+      <header className="flex items-center justify-between px-4 pt-3 pb-2 bg-white/50 dark:bg-background-dark/50 backdrop-blur-lg border-b border-slate-200 dark:border-slate-800 shrink-0">
         <button
           onClick={() => navigate(-1)}
           className="p-2 text-slate-600 dark:text-slate-400"
@@ -76,6 +82,7 @@ const ReadingDetail: React.FC = () => {
           <span className="material-symbols-outlined">arrow_back_ios_new</span>
         </button>
         <div className="flex-1 text-center truncate px-4">
+          <p className="text-[9px] text-slate-400 mb-0.5">{formatDate(liturgy.date)}</p>
           <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-0.5">{reading.label}</p>
           <h1 className="text-sm font-bold truncate">{reading.reference}</h1>
         </div>
@@ -132,7 +139,8 @@ const ReadingDetail: React.FC = () => {
           <div className="mt-10 pb-10 flex gap-3">
             <button
               onClick={() => {
-                const text = `${reading.label}\n${reading.reference}\n\n${reading.content}${conclusion ? `\n\n${conclusion.intro}\n${conclusion.response}` : ''}`;
+                const dateFormatted = formatDate(liturgy.date);
+                const text = `📅 ${dateFormatted}\n\n${reading.label}\n${reading.reference}\n\n${reading.content}${conclusion ? `\n\n${conclusion.intro}\n${conclusion.response}` : ''}`;
                 navigator.clipboard.writeText(text);
                 alert('Leitura copiada!');
               }}
@@ -144,7 +152,8 @@ const ReadingDetail: React.FC = () => {
 
             <button
               onClick={() => {
-                const text = `${reading.label}\n${reading.reference}\n\n${reading.content}${conclusion ? `\n\n${conclusion.intro}\n${conclusion.response}` : ''}`;
+                const dateFormatted = formatDate(liturgy.date);
+                const text = `📅 ${dateFormatted}\n\n${reading.label}\n${reading.reference}\n\n${reading.content}${conclusion ? `\n\n${conclusion.intro}\n${conclusion.response}` : ''}`;
                 if (navigator.share) {
                   navigator.share({
                     title: `${reading.label} - ${reading.reference}`,

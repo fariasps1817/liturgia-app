@@ -95,13 +95,22 @@ const GeneratePrayers: React.FC = () => {
     }
   }, [cacheChecked, hasLiturgy, data]);
 
+  // Formatar data da liturgia
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr + 'T00:00:00');
+    return date.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' });
+  };
+
   return (
     <div className="pb-32">
-      <header className="sticky top-0 z-30 flex items-center justify-between px-4 h-16 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md">
+      <header className="sticky top-0 z-30 flex items-center justify-between px-4 pt-3 pb-2 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md">
         <button onClick={() => navigate('/')} className="p-2">
           <span className="material-symbols-outlined">arrow_back_ios_new</span>
         </button>
-        <h1 className="font-bold text-base tracking-tight">Preces da Assembleia</h1>
+        <div className="text-center">
+          <p className="text-[9px] text-slate-400">{formatDate(liturgy.date)}</p>
+          <h1 className="font-bold text-base tracking-tight">Preces da Assembleia</h1>
+        </div>
         <button onClick={() => navigate('/preces/personalizar')} className="p-2 text-primary">
           <span className="material-symbols-outlined">tune</span>
         </button>
@@ -178,7 +187,8 @@ const GeneratePrayers: React.FC = () => {
 
                 <button
                   onClick={() => {
-                    const text = `Preces - ${liturgy.title}\n\nResposta: ${data.response}\n\n${data.prayers.map((p, i) => `${i + 1}. ${p}`).join('\n\n')}`;
+                    const dateFormatted = formatDate(liturgy.date);
+                    const text = `📅 ${dateFormatted}\n\nPreces - ${liturgy.title}\n\nResposta: "${data.response}"\n\n${data.prayers.map((p, i) => `${i + 1}. ${p}`).join('\n\n')}`;
                     navigator.clipboard.writeText(text);
                     alert('Preces copiadas para a área de transferência!');
                   }}
@@ -190,7 +200,8 @@ const GeneratePrayers: React.FC = () => {
 
                 <button
                   onClick={() => {
-                    const text = `Preces - ${liturgy.title}\n\nResposta: "${data.response}"\n\n${data.prayers.map((p, i) => `${i + 1}. ${p}`).join('\n\n')}`;
+                    const dateFormatted = formatDate(liturgy.date);
+                    const text = `📅 ${dateFormatted}\n\nPreces - ${liturgy.title}\n\nResposta: "${data.response}"\n\n${data.prayers.map((p, i) => `${i + 1}. ${p}`).join('\n\n')}`;
                     if (navigator.share) {
                       navigator.share({
                         title: `Preces - ${liturgy.title}`,
