@@ -124,7 +124,7 @@ const About: React.FC = () => {
               <div>
                 <h4 className="text-lg font-bold mb-1">Ajude a manter online</h4>
                 <p className="text-sm text-slate-400 leading-relaxed px-4">
-                  Este projeto é mantido por doações voluntárias. Sua ajuda cobre custos de IA e manutenção.
+                  Este projeto é desenvolvido e mantido por <strong className="text-white">Farias Sousa</strong>. Sua doação ajuda a cobrir custos de IA e manutenção.
                 </p>
               </div>
 
@@ -145,7 +145,7 @@ const About: React.FC = () => {
         </section>
 
         <p className="text-center text-[10px] text-slate-600 pb-10">
-          © 2024 Liturgia Diária. Desenvolvido com carinho para a comunidade.
+          © 2024-2026 Liturgia Diária. Desenvolvido por <span className="text-slate-400">Farias Sousa</span> para a comunidade.
         </p>
       </main>
     </div>
