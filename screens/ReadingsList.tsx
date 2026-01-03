@@ -21,6 +21,13 @@ const ReadingsList: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [displayDate, setDisplayDate] = useState<Date>(new Date());
 
+  // Obtém a data atual no timezone América/Fortaleza
+  const getTodayFortaleza = (): string => {
+    const now = new Date();
+    // Formata para YYYY-MM-DD no timezone de Fortaleza
+    return now.toLocaleDateString('sv-SE', { timeZone: 'America/Fortaleza' });
+  };
+
   const dateStr = displayDate.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
 
   const loadLiturgy = useCallback(async () => {
@@ -28,23 +35,45 @@ const ReadingsList: React.FC = () => {
     setError(null);
 
     try {
-      // Verificar se há liturgia salva do calendário
+      const todayFortaleza = getTodayFortaleza();
+
+      // Verificar se há liturgia salva do calendário (seleção manual)
       const savedLiturgy = localStorage.getItem('liturgy_today');
       const savedDate = localStorage.getItem('liturgy_selected_date');
+      const cacheDate = localStorage.getItem('liturgy_cache_date');
 
+      // Se existe seleção manual do calendário, usar ela
       if (savedLiturgy && savedDate) {
-        // Usar liturgia salva do calendário
         const liturgyData: DayLiturgy = JSON.parse(savedLiturgy);
         setLiturgy(liturgyData);
-        // Parsear data corretamente (formato: YYYY-MM-DD)
         const [year, month, day] = savedDate.split('-').map(Number);
         setDisplayDate(new Date(year, month - 1, day));
-      } else {
-        // Buscar liturgia do dia atual
+      }
+      // Se existe cache mas é de outro dia, buscar nova liturgia
+      else if (savedLiturgy && cacheDate && cacheDate !== todayFortaleza) {
+        console.log(`Cache expirado: ${cacheDate} !== ${todayFortaleza}. Buscando nova liturgia...`);
+        localStorage.removeItem('liturgy_today');
+        localStorage.removeItem('liturgy_cache_date');
+
         const data = await fetchLiturgyOfDay();
         setLiturgy(data);
         setDisplayDate(new Date());
         localStorage.setItem('liturgy_today', JSON.stringify(data));
+        localStorage.setItem('liturgy_cache_date', todayFortaleza);
+      }
+      // Se existe cache do mesmo dia, usar
+      else if (savedLiturgy && cacheDate === todayFortaleza) {
+        const liturgyData: DayLiturgy = JSON.parse(savedLiturgy);
+        setLiturgy(liturgyData);
+        setDisplayDate(new Date());
+      }
+      // Não existe cache, buscar
+      else {
+        const data = await fetchLiturgyOfDay();
+        setLiturgy(data);
+        setDisplayDate(new Date());
+        localStorage.setItem('liturgy_today', JSON.stringify(data));
+        localStorage.setItem('liturgy_cache_date', todayFortaleza);
       }
     } catch (err) {
       setError('Não foi possível carregar a liturgia. Usando dados offline.');
@@ -68,12 +97,15 @@ const ReadingsList: React.FC = () => {
   const goToToday = async () => {
     localStorage.removeItem('liturgy_selected_date');
     localStorage.removeItem('liturgy_today');
+    localStorage.removeItem('liturgy_cache_date');
     setDisplayDate(new Date());
     setIsLoading(true);
     try {
+      const todayFortaleza = getTodayFortaleza();
       const data = await fetchLiturgyOfDay();
       setLiturgy(data);
       localStorage.setItem('liturgy_today', JSON.stringify(data));
+      localStorage.setItem('liturgy_cache_date', todayFortaleza);
     } catch (err) {
       console.error(err);
     } finally {
