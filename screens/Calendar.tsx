@@ -183,12 +183,14 @@ const Calendar: React.FC = () => {
         <div className="grid grid-cols-7 gap-1 mb-6">
           {days.map((calendarDay, index) => {
             const dateKey = calendarDay.date.toISOString().split('T')[0];
-            const savedLiturgy = loadedDays[dateKey];
-            const colorClass = savedLiturgy
-              ? COLOR_MAP[savedLiturgy.color] || 'bg-slate-100 dark:bg-surface-dark'
-              : 'bg-slate-100 dark:bg-surface-dark';
             const isLoading = loadingDay === calendarDay.day && calendarDay.isCurrentMonth;
             const isSelected = selectedDay?.date.toISOString().split('T')[0] === dateKey;
+
+            // Cor litúrgica APENAS para a data selecionada
+            const selectedLiturgy = isSelected && selectedDay?.liturgy;
+            const colorClass = selectedLiturgy
+              ? COLOR_MAP[selectedLiturgy.color] || 'bg-slate-100 dark:bg-surface-dark'
+              : 'bg-slate-100 dark:bg-surface-dark';
 
             return (
               <button
@@ -207,14 +209,14 @@ const Calendar: React.FC = () => {
                   <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
                 ) : (
                   <>
-                    <span className={`text-xs font-bold ${savedLiturgy?.color === 'Verde' || savedLiturgy?.color === 'Roxo' || savedLiturgy?.color === 'Vermelho'
+                    <span className={`text-xs font-bold ${selectedLiturgy?.color === 'Verde' || selectedLiturgy?.color === 'Roxo' || selectedLiturgy?.color === 'Vermelho'
                       ? 'text-white'
                       : ''
                       }`}>
                       {calendarDay.day}
                     </span>
-                    {savedLiturgy && (
-                      <div className={`w-1.5 h-1.5 rounded-full ${savedLiturgy.color === 'Branco' ? 'bg-yellow-400' : 'bg-white/50'
+                    {selectedLiturgy && (
+                      <div className={`w-1.5 h-1.5 rounded-full ${selectedLiturgy.color === 'Branco' ? 'bg-yellow-400' : 'bg-white/50'
                         }`}></div>
                     )}
                   </>
