@@ -112,12 +112,15 @@ function convertAPIResponse(data: LiturgiaAPIResponse): DayLiturgy {
     // Primeira Leitura
     if (data.leituras.primeiraLeitura.length > 0) {
         const leitura = data.leituras.primeiraLeitura[0];
+        const textoCompleto = leitura.titulo
+            ? `${leitura.titulo} – ${leitura.texto}`
+            : leitura.texto;
         readings.push({
             id: String(readingId++),
             type: 'FirstReading',
             label: 'Primeira Leitura',
             reference: leitura.referencia,
-            content: leitura.texto
+            content: textoCompleto
         });
     }
 
@@ -136,24 +139,30 @@ function convertAPIResponse(data: LiturgiaAPIResponse): DayLiturgy {
     // Segunda Leitura (se existir)
     if (data.leituras.segundaLeitura.length > 0) {
         const leitura = data.leituras.segundaLeitura[0];
+        const textoCompleto = leitura.titulo
+            ? `${leitura.titulo} – ${leitura.texto}`
+            : leitura.texto;
         readings.push({
             id: String(readingId++),
             type: 'SecondReading',
             label: 'Segunda Leitura',
             reference: leitura.referencia,
-            content: leitura.texto
+            content: textoCompleto
         });
     }
 
     // Evangelho
     if (data.leituras.evangelho.length > 0) {
         const evangelho = data.leituras.evangelho[0];
+        const textoCompleto = evangelho.titulo
+            ? `${evangelho.titulo} – ${evangelho.texto}`
+            : evangelho.texto;
         readings.push({
             id: String(readingId++),
             type: 'Gospel',
             label: 'Evangelho',
             reference: evangelho.referencia,
-            content: evangelho.texto
+            content: textoCompleto
         });
     }
 
