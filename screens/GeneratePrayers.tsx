@@ -21,9 +21,6 @@ const GeneratePrayers: React.FC = () => {
   const customResponse = searchParams.get('resp') || undefined;
   const localContext = searchParams.get('ctx') || undefined;
 
-  // Chave do cache baseada na data de hoje
-  const cacheKey = `preces_${new Date().toISOString().split('T')[0]}`;
-
   // Verificar se há personalização (parâmetros na URL)
   const hasPersonalization = Boolean(customResponse || localContext);
 
@@ -32,32 +29,50 @@ const GeneratePrayers: React.FC = () => {
     const saved = localStorage.getItem('liturgy_today');
     if (saved) {
       try {
-        setLiturgy(JSON.parse(saved));
+        const liturgyData: DayLiturgy = JSON.parse(saved);
+        setLiturgy(liturgyData);
+
+        // Chave do cache baseada na data da LITURGIA selecionada
+        const liturgyDate = new Date(liturgyData.date).toISOString().split('T')[0];
+        const cacheKey = `preces_${liturgyDate}`;
+        const cachedDateKey = sessionStorage.getItem('preces_date_key');
+
+        // Se tem personalização, limpar cache e marcar para regenerar
+        if (hasPersonalization) {
+          sessionStorage.removeItem(cacheKey);
+          setCacheChecked(true);
+          return;
+        }
+
+        // Verificar se a data do cache é diferente da data atual da liturgia
+        if (cachedDateKey && cachedDateKey !== liturgyDate) {
+          console.log(`Data mudou: ${cachedDateKey} -> ${liturgyDate}. Limpando cache de preces...`);
+          sessionStorage.removeItem(`preces_${cachedDateKey}`);
+          sessionStorage.removeItem('preces_date_key');
+          setCacheChecked(true);
+          return;
+        }
+
+        // Verificar cache de preces (apenas se não tiver personalização)
+        const cachedPrayers = sessionStorage.getItem(cacheKey);
+        if (cachedPrayers) {
+          try {
+            const parsed = JSON.parse(cachedPrayers);
+            setData(parsed);
+            setFromCache(true);
+          } catch (e) {
+            console.error('Erro ao carregar preces do cache:', e);
+          }
+        }
+        setCacheChecked(true);
       } catch (e) {
         console.error('Erro ao carregar liturgia:', e);
+        setCacheChecked(true);
       }
-    }
-
-    // Se tem personalização, limpar cache e marcar para regenerar
-    if (hasPersonalization) {
-      sessionStorage.removeItem(cacheKey);
+    } else {
       setCacheChecked(true);
-      return;
     }
-
-    // Verificar cache de preces (apenas se não tiver personalização)
-    const cachedPrayers = sessionStorage.getItem(cacheKey);
-    if (cachedPrayers) {
-      try {
-        const parsed = JSON.parse(cachedPrayers);
-        setData(parsed);
-        setFromCache(true);
-      } catch (e) {
-        console.error('Erro ao carregar preces do cache:', e);
-      }
-    }
-    setCacheChecked(true);
-  }, [cacheKey, hasPersonalization]);
+  }, [hasPersonalization]);
 
   const handleGenerate = async (forceRegenerate = false) => {
     // Se não forçar regeneração e tiver cache, não gerar
@@ -76,8 +91,11 @@ const GeneratePrayers: React.FC = () => {
         localContext
       );
       setData(result);
-      // Salvar no cache
+      // Salvar no cache usando a data da liturgia
+      const liturgyDate = new Date(liturgy.date).toISOString().split('T')[0];
+      const cacheKey = `preces_${liturgyDate}`;
       sessionStorage.setItem(cacheKey, JSON.stringify(result));
+      sessionStorage.setItem('preces_date_key', liturgyDate);
     } catch (err) {
       setError('Erro ao conectar com a IA. Verifique a API Key no .env.local');
     } finally {
